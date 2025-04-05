@@ -1,6 +1,7 @@
 {
   "short_name": "E-Shop",
   "name": "Ecommerce PWA",
+  "description": "A sleek and simple ecommerce Progressive Web App built with React.",
   "icons": [
     {
       "src": "logo192.png",
@@ -27,8 +28,8 @@
       "form_factor": "narrow"
     }
   ],
-  "start_url": "/your-repo-name/",
-  "scope": "/your-repo-name/",
+  "start_url": "/ecommerce-pwa/",
+  "scope": "/ecommerce-pwa/",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff",
