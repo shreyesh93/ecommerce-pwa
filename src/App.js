@@ -7,10 +7,26 @@ function App() {
   const [cartItems, setCartItems] = useState([]);
 
   return (
-    <Router>
+    <Router basename="/ecommerce-pwa">
       <Routes>
-        <Route path="/" element={<EcommerceApp cartItems={cartItems} setCartItems={setCartItems} />} />
-        <Route path="/cart" element={<CartPage cartItems={cartItems} setCartItems={setCartItems} />} />
+        <Route
+          path="/"
+          element={
+            <EcommerceApp
+              cartItems={cartItems}
+              setCartItems={setCartItems}
+            />
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <CartPage
+              cartItems={cartItems}
+              setCartItems={setCartItems}
+            />
+          }
+        />
       </Routes>
     </Router>
   );

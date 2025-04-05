@@ -11,11 +11,11 @@ root.render(
   </React.StrictMode>
 );
 
-// Service Worker Registration
+// ✅ Service Worker Registration for GitHub Pages
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
-      .register('/service-worker.js')
+      .register('./service-worker.js') // 👈 Correct relative path
       .then(reg => console.log('[Main] Service Worker Registered:', reg))
       .catch(err => console.error('[Main] Service Worker Registration Failed:', err));
   });
