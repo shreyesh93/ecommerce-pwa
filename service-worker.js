@@ -5,26 +5,33 @@ const urlsToCache = [
   '/ecommerce-pwa/logo192.png',
   '/ecommerce-pwa/logo512.png',
   '/ecommerce-pwa/manifest.json',
-  '/ecommerce-pwa/favicon.ico'
-  // Note: Avoid including '/static/js/bundle.js' unless you're sure it exists in your build
+  '/ecommerce-pwa/favicon.ico',
+  '/ecommerce-pwa/static/js/bundle.js'
 ];
 
-// Install event
 self.addEventListener('install', event => {
   console.log('[Service Worker] Installing...');
-  self.skipWaiting(); // optional: activate SW immediately
 
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
+    caches.open(CACHE_NAME).then(async cache => {
       console.log('[Service Worker] Caching app shell...');
-      return cache.addAll(urlsToCache).catch(err => {
-        console.error('[Service Worker] Cache addAll error:', err);
-      });
+      for (let url of urlsToCache) {
+        try {
+          const response = await fetch(url);
+          if (response.ok) {
+            await cache.put(url, response.clone());
+            console.log(`[Service Worker] Cached: ${url}`);
+          } else {
+            console.warn(`[Service Worker] Skipped (response not ok): ${url}`);
+          }
+        } catch (err) {
+          console.error(`[Service Worker] Failed to cache: ${url}`, err);
+        }
+      }
     })
   );
 });
 
-// Activate event
 self.addEventListener('activate', event => {
   console.log('[Service Worker] Activated!');
   event.waitUntil(
@@ -32,7 +39,7 @@ self.addEventListener('activate', event => {
       Promise.all(
         keyList.map(key => {
           if (key !== CACHE_NAME) {
-            console.log('[Service Worker] Deleting old cache:', key);
+            console.log(`[Service Worker] Removing old cache: ${key}`);
             return caches.delete(key);
           }
         })
@@ -41,14 +48,11 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch event
 self.addEventListener('fetch', event => {
   console.log('[Service Worker] Fetching:', event.request.url);
   event.respondWith(
     caches.match(event.request).then(response => {
-      return response || fetch(event.request).catch(error => {
-        console.error('[Service Worker] Fetch failed:', error);
-      });
+      return response || fetch(event.request);
     })
   );
 });
