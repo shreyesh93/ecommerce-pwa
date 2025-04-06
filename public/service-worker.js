@@ -1,13 +1,14 @@
 const CACHE_NAME = "v1";
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/logo192.png',
-  '/logo512.png',
-  '/manifest.json',
-  '/favicon.ico',
-  '/static/js/bundle.js' 
+  '/ecommerce-pwa/',
+  '/ecommerce-pwa/index.html',
+  '/ecommerce-pwa/logo192.png',
+  '/ecommerce-pwa/logo512.png',
+  '/ecommerce-pwa/manifest.json',
+  '/ecommerce-pwa/favicon.ico',
+  '/ecommerce-pwa/static/js/bundle.js'
 ];
+
 
 self.addEventListener('install', event => {
   console.log('[Service Worker] Installing...');
