@@ -6,16 +6,17 @@ const urlsToCache = [
   '/ecommerce-pwa/logo512.png',
   '/ecommerce-pwa/manifest.json',
   '/ecommerce-pwa/favicon.ico',
-  '/ecommerce-pwa/static/js/bundle.js'
+  '/ecommerce-pwa/static/js/bundle.js',
+  '/ecommerce-pwa/screenshots/screenshot-desktop.png' // ✅ Add if this is needed
 ];
 
 self.addEventListener('install', event => {
   console.log('[Service Worker] Installing...');
-
   event.waitUntil(
-    caches.open(CACHE_NAME).then(async cache => {
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
       console.log('[Service Worker] Caching app shell...');
-      for (let url of urlsToCache) {
+      for (const url of urlsToCache) {
         try {
           const response = await fetch(url);
           if (response.ok) {
@@ -28,7 +29,7 @@ self.addEventListener('install', event => {
           console.error(`[Service Worker] Failed to cache: ${url}`, err);
         }
       }
-    })
+    })()
   );
 });
 
