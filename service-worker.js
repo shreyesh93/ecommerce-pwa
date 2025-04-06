@@ -9,13 +9,25 @@ const urlsToCache = [
   '/ecommerce-pwa/static/js/bundle.js'
 ];
 
-
 self.addEventListener('install', event => {
   console.log('[Service Worker] Installing...');
+
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
+    caches.open(CACHE_NAME).then(async cache => {
       console.log('[Service Worker] Caching app shell...');
-      return cache.addAll(urlsToCache);
+      for (let url of urlsToCache) {
+        try {
+          const response = await fetch(url);
+          if (response.ok) {
+            await cache.put(url, response.clone());
+            console.log(`[Service Worker] Cached: ${url}`);
+          } else {
+            console.warn(`[Service Worker] Skipped (response not ok): ${url}`);
+          }
+        } catch (err) {
+          console.error(`[Service Worker] Failed to cache: ${url}`, err);
+        }
+      }
     })
   );
 });
@@ -27,6 +39,7 @@ self.addEventListener('activate', event => {
       Promise.all(
         keyList.map(key => {
           if (key !== CACHE_NAME) {
+            console.log(`[Service Worker] Removing old cache: ${key}`);
             return caches.delete(key);
           }
         })
